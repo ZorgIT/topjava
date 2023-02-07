@@ -3,11 +3,11 @@ package ru.javawebinar.topjava.model;
 import java.time.LocalDateTime;
 
 public class UserMeal {
-    private final LocalDateTime dateTime;
+    private final LocalDateTime dateTime;//Дата время употребления
 
-    private final String description;
+    private final String description; //Наименование описание
 
-    private final int calories;
+    private final int calories; // Каллории в порции
 
     public UserMeal(LocalDateTime dateTime, String description, int calories) {
         this.dateTime = dateTime;

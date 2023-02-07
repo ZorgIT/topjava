@@ -9,7 +9,7 @@ public class UserMealWithExcess {
 
     private final int calories;
 
-    private final boolean excess;
+    private final boolean excess; //превышает ли сумма дневной каллораж пользователя или нет
 
     public UserMealWithExcess(LocalDateTime dateTime, String description, int calories, boolean excess) {
         this.dateTime = dateTime;
