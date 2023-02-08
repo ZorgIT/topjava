@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.chrono.ChronoLocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.TimeUtil.isBetweenHalfOpen;
 
@@ -79,8 +80,12 @@ public class UserMealsUtil {
 
     public static List<UserMealWithExcess> filteredByStreams(
             List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO Implement by streams
+        Map<LocalDate, Integer> caloriesSumByDate = meals.stream().collect(Collectors.groupingBy(um -> um.getDateTime().toLocalDate(),
+                Collectors.summingInt(UserMeal::getCalories)));
 
-        return null;
+        return meals.stream().filter(um->TimeUtil.isBetweenHalfOpen(um.getDateTime().toLocalTime(),startTime,endTime))
+                .map(um->new UserMealWithExcess(um.getDateTime(),um.getDescription(),um.getCalories(),
+                        caloriesSumByDate.get(um.getDateTime().toLocalDate())>caloriesPerDay)).
+                collect(Collectors.toList());
     }
 }
