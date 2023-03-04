@@ -26,35 +26,27 @@ import java.time.LocalTime;
 })
 public class Meal extends AbstractBaseEntity {
 
-//    @Id
-//    @Column(name="id")
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private int id;
-
     public static final String DELETE = "Meal.delete";
     public static final String ALL_SORTED = "Meal.getAll";
     public static final String GET_BETWEEN = "Meal.getBetween";
 
-    @Column(name="date_time", nullable = false)
+    @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
 
-
-    @Column(name="description")
+    @Column(name = "description", nullable = false)
     @NotBlank
-    @Size(min=2, max = 255)
+    @Size(min = 2, max = 255)
     private String description;
 
-    @Column(name="calories", nullable = false)
-    @Range(min=1, max = 3000)
+    @Column(name = "calories", nullable = false)
+    @Range(min = 1, max = 3000)
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @NotNull
     private User user;
-
-
 
     public Meal() {
     }
