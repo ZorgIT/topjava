@@ -16,11 +16,11 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
 
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeTrue;
+import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -33,7 +33,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @Ignore
 public class MealServiceTest {
-    private static final Logger logger = Logger.getLogger("");
+    private static final Logger logger = getLogger("");
     private static final StringBuilder summary = new StringBuilder();
 
     //Override rule to each test status, with additional time info.
@@ -41,43 +41,31 @@ public class MealServiceTest {
 
     @Rule
     public Stopwatch stopwatch = new Stopwatch() {
-        @Override
-        protected void succeeded(long nanos, Description description) {
-            logInfo(description, "succeeded", nanos);
-        }
-
-        @Override
-        protected void failed(long nanos, Throwable e, Description description) {
-            logInfo(description, "failed", nanos);
-        }
-
-        @Override
-        protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
-            logInfo(description, "skipped", nanos);
-        }
 
         @Override
         protected void finished(long nanos, Description description) {
-           logInfo(description, "finished", nanos);
+            logInfo(description, nanos);
+        }
+
+        private void logInfo(Description description, long nanos) {
+            String testName = description.getMethodName();
+            String result = String.format("%30s | %10d ms   | \n",
+                    testName, TimeUnit.NANOSECONDS.toMillis(nanos));
+            logger.info(result);
+            summary.append(result);
         }
     };
 
-    private static void logInfo(Description description, String status, long nanos) {
-        String testName = description.getMethodName();
-        String result = String.format("Test %s %s, spent %d microseconds",
-                testName, status, TimeUnit.NANOSECONDS.toMicros(nanos));
-        logger.info(result);
-        summary.append(result + "\n");
-    }
 
     @AfterClass
     public static void printResult() {
-       logger.info("SUMMARY RESULT:"+"\n" +summary);
+        logger.info("\n SUMMARY RESULT:" + "\n" +
+                "===========TestName============  =====Time, ms===\n"
+                + summary);
     }
 
     @Autowired
     private MealService service;
-
 
     //Main test case
     @Test
@@ -158,20 +146,4 @@ public class MealServiceTest {
     public void getBetweenWithNullDates() {
         MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
     }
-
-    //additional test case to check stopwatch
-    @Test
-    public void succeeds() {
-    }
-
-    @Test
-    public void fails() {
-        fail();
-    }
-
-    @Test
-    public void skips() {
-        assumeTrue(false);
-    }
-
 }
