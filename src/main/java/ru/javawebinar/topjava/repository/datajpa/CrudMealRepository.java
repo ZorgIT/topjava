@@ -24,20 +24,8 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
             "ORDER BY m.dateTime DESC")
     List<Meal> getAll(@Param("userId") int userId);
 
-    @Query("SELECT m from Meal m " +
-            "WHERE m.user.id=:userId " +
-            "AND m.dateTime >= :startDate " +
-            "AND m.dateTime < : endDate " +
-            "ORDER by m. dateTime DESC")
-    List<Meal> getBetweenHalfOpen(@Param("startDate") LocalDateTime startDate,
-                                  @Param("endDate") LocalDateTime endDate,
-                                  @Param("userId") int userId);
-
-//    public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-//        return em.createNamedQuery(Meal.GET_BETWEEN, Meal.class)
-//                .setParameter("userId", userId)
-//                .setParameter("startDateTime", startDateTime)
-//                .setParameter("endDateTime", endDateTime)
-//                .getResultList();
-//    }
+    @Query("SELECT m from Meal m WHERE m.user.id=:userId AND m.dateTime >= :startDate AND m.dateTime < :endDate ORDER BY m.dateTime DESC")
+    List<Meal> getBetweenHalfOpen(@Param("startDate") LocalDateTime startDate
+            , @Param("endDate") LocalDateTime endDate
+            , @Param("userId") int userId);
 }
