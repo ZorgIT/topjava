@@ -24,7 +24,6 @@ public class TestTimer {
         }
     };
 
-
     //https://junit.org/junit4/javadoc/4.12/org/junit/rules/ExternalResource.html
     public static final ExternalResource SUMMARY = new ExternalResource() {
         @Override
