@@ -1,14 +1,19 @@
-const mealAjaxUrl= "profile/meals";
+const mealAjaxUrl = "profile/meals";
 
-const ctx= {
+const ctx = {
     ajaxUrl: mealAjaxUrl,
-    updateTable:function () {
-            $.ajax({
+    updateTable: function () {
+        $.ajax({
             type: "GET",
             url: mealAjaxUrl + "filter",
             data: $("#filter").serialize()
         }).done(updateTableByData);
     }
+}
+
+function clearFilter() {
+    $("#filter")[0].reset();
+    $.get(mealAjaxUrl, updateTableByData)
 }
 
 $(function () {
