@@ -10,7 +10,7 @@ const ctx = {
             data: $("#filter").serialize()
         }).done(updateTableByData);
     }
-}
+};
 
 function clearFilter() {
     $("#filter")[0].reset();
@@ -18,35 +18,42 @@ function clearFilter() {
 }
 
 $(function () {
-    makeEditable(
-        $("#datatable").DataTable({
-            "paging": false,
-            "info": true,
-            "columns": [
-                {
-                    "data": "dateTime"
-                },
-                {
-                    "data": "description"
-                },
-                {
-                    "data": "calories"
-                },
-                {
-                    "defaultContent": "Edit",
-                    "orderable": false
-                },
-                {
-                    "defaultContent": "Delete",
-                    "orderable": false
+    makeEditable({
+        "columns": [
+            {
+                "data": "dateTime",
+                "render": function (data, type, row) {
+                    if (type === 'display') {
+                        return date.replace('T', ' ').substr(0, 16);
+                    }
+                    return date;
                 }
-            ],
-            "order": [
-                [
-                    0,
-                    "desc"
-                ]
+            },
+            {
+                "data": "description"
+            },
+            {
+                "data": "calories"
+            },
+            {
+                "render": renderEditBtn,
+                "defaultContent": "",
+                "orderbale": false
+            },
+            {
+                "render": renderDeleteBtn,
+                "defaultContent": "",
+                "orderable": false
+            }
+        ],
+        "order": [
+            [
+                0,
+                "desc"
             ]
-        })
-    );
+        ],
+        "createRow": function (row, data, dataIndex) {
+            $(row).attr("data-meal-excess", data.excess);
+        }
+    });
 });
